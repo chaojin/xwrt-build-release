@@ -1,77 +1,108 @@
-# How to build x-wrt for your devices
+![OpenWrt logo](https://raw.githubusercontent.com/x-wrt/com.x-wrt/master/x-wrt-logo/x-wrt-logo-Aldrich-raw.svg)
 
+OpenWrt Project is a Linux operating system targeting embedded devices. Instead
+of trying to create a single, static firmware, OpenWrt provides a fully
+writable filesystem with package management. This frees you from the
+application selection and configuration provided by the vendor and allows you
+to customize the device through the use of packages to suit any application.
+For developers, OpenWrt is the framework to build an application without having
+to build a complete firmware around it; for users this means the ability for
+full customization, to use the device in ways never envisioned.
 
-## First, fork this repository to your github account.
+Sunshine!
 
-## Clone it from your fork.
+## Download
+
+Built firmware images are available for many architectures and come with a
+package selection to be used as WiFi home router. To quickly find a factory
+image usable to migrate from a vendor stock firmware to OpenWrt, try the
+*Firmware Selector*.
+
+* [OpenWrt Firmware Selector](https://firmware-selector.openwrt.org/)
+
+If your device is supported, please follow the **Info** link to see install
+instructions or consult the support resources listed below.
+
+##
+
+An advanced user may require additional or specific package. (Toolchain, SDK, ...) For everything else than simple firmware download, try the wiki download page:
+
+* [OpenWrt Wiki Download](https://openwrt.org/downloads)
+
+## Development
+
+To build your own firmware you need a GNU/Linux, BSD or macOS system (case
+sensitive filesystem required). Cygwin is unsupported because of the lack of a
+case sensitive file system.
+
+### Requirements
+
+You need the following tools to compile OpenWrt, the package names vary between
+distributions. A complete list with distribution specific packages is found in
+the [Build System Setup](https://openwrt.org/docs/guide-developer/build-system/install-buildsystem)
+documentation.
 
 ```
-git clone https://github.com/[your_account]/build-release.git
+binutils bzip2 diff find flex gawk gcc-6+ getopt grep install libc-dev libz-dev
+make4.1+ perl python3.8+ rsync subversion unzip which
 ```
 
-## Select a release tag to build.
+### Quickstart
 
-You can find available tags at [https://github.com/x-wrt/x-wrt/tags](https://github.com/x-wrt/x-wrt/tags)
+1. Run `./scripts/feeds update -a` to obtain all the latest package definitions
+   defined in feeds.conf / feeds.conf.default
 
-For example tag `23.06_b202307110013`
-```
-echo -n 23.06_b202307110013 >release.tag
-```
-Then you are going to build release tag `23.06_b202307110013`
+2. Run `./scripts/feeds install -a` to install symlinks for all obtained
+   packages into package/feeds/
 
-If you want to build master branch, then use `master` as tag name
-```
-echo -n master >release.tag
-```
+3. Run `make menuconfig` to select your preferred configuration for the
+   toolchain, target system & firmware packages.
 
-## Run `sh update-tags.sh <target>` to start building your target.
+4. Run `make` to build your firmware. This will download all sources, build the
+   cross-compile toolchain and then cross-compile the GNU/Linux kernel & all chosen
+   applications for your target system.
 
-Available targets see `cat target.list`
-```
-TARGET=ath79-generic
-TARGET=ath79-generic-nosymbol
-TARGET=ath79-nand
-TARGET=ipq40xx-generic
-TARGET=bcm27xx-bcm2709
-TARGET=sunxi-cortexa7
-TARGET=bcm27xx-bcm2710
-TARGET=mediatek-mt7622
-TARGET=mediatek-filogic
-TARGET=qualcommax-ipq807x
-TARGET=bcm27xx-bcm2711
-TARGET=bcm53xx-generic
-TARGET=ipq806x-generic
-TARGET=kirkwood-generic
-TARGET=mvebu-cortexa9
-TARGET=ramips-mt7620
-TARGET=ramips-mt7620-nosymbol
-TARGET=ramips-mt7621
-TARGET=ramips-mt7621-ext4fs
-TARGET=ramips-mt76x8
-TARGET=ramips-mt76x8-nosymbol
-TARGET=rockchip-armv8
-TARGET=armsr-armv8
-TARGET=x86_64
-TARGET=x86_64-docker
-```
+### Related Repositories
 
-For example, to build all `ipq40xx-generic` target devices, please run:
-```
-sh update-tags.sh ipq40xx-generic
-```
+The main repository uses multiple sub-repositories to manage packages of
+different categories. All packages are installed via the OpenWrt package
+manager called `opkg`. If you're looking to develop the web interface or port
+packages to OpenWrt, please find the fitting repository below.
 
-## What is your device target?
+* [LuCI Web Interface](https://github.com/openwrt/luci): Modern and modular
+  interface to control the device via a web browser.
 
-You can find your device firmware at [https://downloads.x-wrt.com/rom/](https://downloads.x-wrt.com/rom/)
+* [OpenWrt Packages](https://github.com/openwrt/packages): Community repository
+  of ported packages.
 
-and then you should known the target name
+* [OpenWrt Routing](https://github.com/openwrt/routing): Packages specifically
+  focused on (mesh) routing.
 
-for example:
+* [OpenWrt Video](https://github.com/openwrt/video): Packages specifically
+  focused on display servers and clients (Xorg and Wayland).
 
-`Xiaomi Mi Router R3` target is `ramips-mt7620`
+## Support Information
 
-`P&W R619AC` target is `ipq40xx-generic`
+For a list of supported devices see the [OpenWrt Hardware Database](https://openwrt.org/supported_devices)
 
-`x86 64bits` target is `x86_64`
+### Documentation
 
-...
+* [Quick Start Guide](https://openwrt.org/docs/guide-quick-start/start)
+* [User Guide](https://openwrt.org/docs/guide-user/start)
+* [Developer Documentation](https://openwrt.org/docs/guide-developer/start)
+* [Technical Reference](https://openwrt.org/docs/techref/start)
+
+### Support Community
+
+* [Forum](https://forum.openwrt.org): For usage, projects, discussions and hardware advise.
+* [Support Chat](https://webchat.oftc.net/#openwrt): Channel `#openwrt` on **oftc.net**.
+
+### Developer Community
+
+* [Bug Reports](https://bugs.openwrt.org): Report bugs in OpenWrt
+* [Dev Mailing List](https://lists.openwrt.org/mailman/listinfo/openwrt-devel): Send patches
+* [Dev Chat](https://webchat.oftc.net/#openwrt-devel): Channel `#openwrt-devel` on **oftc.net**.
+
+## License
+
+OpenWrt is licensed under GPL-2.0
